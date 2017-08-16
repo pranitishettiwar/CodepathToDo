@@ -1,7 +1,8 @@
 package com.codepath.simpletodo;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         populateArrayItems();
+
         lvItems = (ListView) findViewById(R.id.lvItems);
         lvItems.setAdapter(aToDoAdapter);
         etEditText = (EditText) findViewById(R.id.etEditText);
@@ -38,36 +40,60 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Sending data to activity 2
+                Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+                i.putExtra("item", todoItems.get(position).toString());
+                i.putExtra("item_position", position);
+                startActivityForResult(i, 1);
+            }
+        });
     }
 
-    public void populateArrayItems(){
+    public void populateArrayItems() {
         readItems();
         aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
     }
 
-    private void readItems(){
+    private void readItems() {
         File fileDir = getFilesDir();
         File file = new File(fileDir, "todo.txt");
-        try{
+        try {
             todoItems = new ArrayList<String>(FileUtils.readLines(file));
-        } catch (IOException e){
+        } catch (IOException e) {
             todoItems = new ArrayList<String>();
         }
     }
 
-    private void writeItems(){
+    private void writeItems() {
         File fileDir = getFilesDir();
         File file = new File(fileDir, "todo.txt");
-        try{
+        try {
             FileUtils.writeLines(file, todoItems);
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void onAddItem(View view){
+    public void onAddItem(View view) {
         aToDoAdapter.add(etEditText.getText().toString());
         etEditText.setText("");
         writeItems();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            String item = data.getExtras().getString("item");
+            int item_position = data.getIntExtra("item_position", 0);
+
+            todoItems.set(item_position, item);
+            aToDoAdapter.notifyDataSetChanged();
+            writeItems();
+        }
     }
 }
