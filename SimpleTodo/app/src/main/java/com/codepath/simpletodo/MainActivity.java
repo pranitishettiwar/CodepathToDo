@@ -2,6 +2,7 @@ package com.codepath.simpletodo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> aToDoAdapter;
     ListView lvItems;
     EditText etEditText;
+    FragmentManager fm = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Sending data to EditItemActivity
-                Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                i.putExtra("item", todoItems.get(position).toString());
-                i.putExtra("item_position", position);
-                startActivityForResult(i, 1);
+                EditItemDialogFragment editItemDialogFragment = new EditItemDialogFragment();
+                // Show DialogFragment
+                editItemDialogFragment.show(fm, "Dialog Fragment");
+
+
+//                //Sending data to EditItemActivity
+//                Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+//                i.putExtra("item", todoItems.get(position).toString());
+//                i.putExtra("item_position", position);
+//                startActivityForResult(i, 1);
             }
         });
     }
@@ -96,4 +103,11 @@ public class MainActivity extends AppCompatActivity {
             writeItems();
         }
     }
+
+    private void showEditDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        EditItemDialogFragment editNameDialogFragment = EditItemDialogFragment.newInstance("Some Title");
+        editNameDialogFragment.show(fm, "fragment_edit_name");
+    }
+
 }
