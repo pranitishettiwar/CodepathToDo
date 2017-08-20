@@ -13,6 +13,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:onClick="onAddItem"
+        android:background="#ea9833"
+        android:height="20dp"
+        android:width="60dp"
         android:layout_alignParentEnd="true" />
 
     <ListView

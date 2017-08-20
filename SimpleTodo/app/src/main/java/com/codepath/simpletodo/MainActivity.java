@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Sending data to activity 2
+                //Sending data to EditItemActivity
                 Intent i = new Intent(MainActivity.this, EditItemActivity.class);
                 i.putExtra("item", todoItems.get(position).toString());
                 i.putExtra("item_position", position);
