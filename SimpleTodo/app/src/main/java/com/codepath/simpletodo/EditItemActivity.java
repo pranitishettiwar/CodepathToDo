@@ -23,13 +23,13 @@ public class EditItemActivity extends AppCompatActivity {
         etEditItem = (EditText) findViewById(R.id.etEditItem);
 
         item = getIntent().getStringExtra("item");
-        item_position = getIntent().getIntExtra("item_position", 0);
+        item_position = getIntent().getIntExtra("item_position", 1);
         etEditItem.setText(item);
         etEditItem.setSelection(etEditItem.getText().length());
 
     }
 
-    private void updateItem() {
+    private void updateItemInDB() {
         ToDoItem itemInDB = new ToDoItem();
 
         //Saving the Edited value in DB
@@ -39,7 +39,7 @@ public class EditItemActivity extends AppCompatActivity {
     }
 
     public void editItem(View view) {
-        updateItem();
+        updateItemInDB();
         //Sending back the data to MainActivity
         Intent i = new Intent();
         i.putExtra("item", etEditItem.getText().toString());

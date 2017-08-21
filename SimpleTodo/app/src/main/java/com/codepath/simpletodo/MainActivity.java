@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 todoItems.remove(position);
                 aToDoAdapter.notifyDataSetChanged();
-                deleteItem(position);
+                deleteItemInDB(position);
                 return true;
             }
         });
@@ -61,35 +61,34 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void deleteItem(int position) {
+    private void deleteItemInDB(int position) {
         ToDoItem deleteInDB = new ToDoItem();
 
         deleteInDB.setPosition(position);
         deleteInDB.delete();
 
-        //Decrement DB item position by 1
-        // Query  the table to get all the items after current deleted item
+        // Query  the table to get all the items after current deleted item, and decrement their position by 1.
+        //Now the item positions on UI matches the value stored in DB for all item, except we still have last item remaining
+        //Delete the last item in DB, as it's the duplicate of last-1 element
         List<ToDoItem> toDoItemList = SQLite.select().from(ToDoItem.class).where(ToDoItem_Table.position.greaterThan(position)).queryList();
 
         for (int i = 0; i < toDoItemList.size(); i++) {
             ToDoItem currentToDoItem = toDoItemList.get(i);
             int dbPosition = currentToDoItem.getPosition();
-
             currentToDoItem.setPosition(dbPosition - 1);
             currentToDoItem.save();
         }
 
-        //Delete the last item in DB
         deleteInDB.setPosition(todoItems.size());
         deleteInDB.delete();
     }
 
     public void populateArrayItems() {
-        readItems();
+        readItemsFromDB();
         aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
     }
 
-    private void readItems() {
+    private void readItemsFromDB() {
         todoItems = new ArrayList<String>();
 
         // Query  whole table
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void writeItem() {
+    private void writeItemToDB() {
         int numTodoItems = todoItems.size();
         ToDoItem toDoItem = new ToDoItem();
         toDoItem.setName(todoItems.get(numTodoItems - 1).toString());
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     public void onAddItem(View view) {
         aToDoAdapter.add(etEditText.getText().toString());
         etEditText.setText("");
-        writeItem();
+        writeItemToDB();
     }
 
     @Override
