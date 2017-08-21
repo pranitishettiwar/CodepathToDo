@@ -62,13 +62,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteItemInDB(int position) {
+        // Delete the current item
         ToDoItem deleteInDB = new ToDoItem();
-
         deleteInDB.setPosition(position);
         deleteInDB.delete();
 
-        // Query  the table to get all the items after current deleted item, and decrement their position by 1.
-        //Now the item positions on UI matches the value stored in DB for all item, except we still have last item remaining
+        // Query the table to get all the items after current deleted item, and decrement their position by 1.
+        //Now the item positions on UI matches the value stored in DB for all items, except we still have last item remaining
         //Delete the last item in DB, as it's the duplicate of last-1 element
         List<ToDoItem> toDoItemList = SQLite.select().from(ToDoItem.class).where(ToDoItem_Table.position.greaterThan(position)).queryList();
 
