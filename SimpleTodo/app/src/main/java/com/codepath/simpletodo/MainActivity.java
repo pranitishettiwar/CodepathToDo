@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> todoItems;
-    ArrayAdapter<String> aToDoAdapter;
+    ItemsAdapter aToDoAdapter;
     ListView lvItems;
     EditText etEditText;
 
@@ -56,7 +56,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void populateArrayItems() {
         readItems();
-        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
+        ArrayList<ListItem> arrayOfListItems = ListItem.getListItem();
+
+        aToDoAdapter = new ItemsAdapter(this, arrayOfListItems);
+        ListView listView = (ListView) findViewById(R.id.lvItems);
+        listView.setAdapter(aToDoAdapter);
+        //aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
     }
 
     private void readItems() {
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAddItem(View view) {
-        aToDoAdapter.add(etEditText.getText().toString());
+        //aToDoAdapter.add(etEditText.getText().toString());
         etEditText.setText("");
         writeItems();
     }
