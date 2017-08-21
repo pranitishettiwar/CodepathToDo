@@ -6,24 +6,40 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
+
 public class EditItemActivity extends AppCompatActivity {
 
     EditText etEditItem;
     private int item_position;
+    private String item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FlowManager.init(new FlowConfig.Builder(this).build());
         setContentView(R.layout.activity_edit_item);
         etEditItem = (EditText) findViewById(R.id.etEditItem);
 
-        String item = getIntent().getStringExtra("item");
-        item_position = getIntent().getIntExtra("item_position", 1);
+        item = getIntent().getStringExtra("item");
+        item_position = getIntent().getIntExtra("item_position", 0);
         etEditItem.setText(item);
         etEditItem.setSelection(etEditItem.getText().length());
+
+    }
+
+    private void updateItem() {
+        ToDoItem itemInDB = new ToDoItem();
+
+        //Saving the Edited value in DB
+        itemInDB.setName(etEditItem.getText().toString());
+        itemInDB.setPosition(item_position);
+        itemInDB.save();
     }
 
     public void editItem(View view) {
+        updateItem();
         //Sending back the data to MainActivity
         Intent i = new Intent();
         i.putExtra("item", etEditItem.getText().toString());
