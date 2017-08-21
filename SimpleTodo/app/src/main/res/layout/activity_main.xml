@@ -12,10 +12,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:width="60dp"
-        android:height="20dp"
-        android:background="#ea9833"
+        android:background="@drawable/round_button"
         android:onClick="onAddItem"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="2dp"
         android:text="@string/add" />
 
     <ListView
