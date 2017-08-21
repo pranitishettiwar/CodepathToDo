@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -122,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
             todoItems.set(item_position, item);
             aToDoAdapter.notifyDataSetChanged();
+
+            Toast.makeText(this,
+                    "Item updated:" + " " + item, Toast.LENGTH_LONG).show();
         }
     }
 }
