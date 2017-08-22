@@ -5,19 +5,19 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.apache.commons.io.FileUtils;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> todoItems;
+    ArrayList<ListItem> todoItems;
     ItemsAdapter aToDoAdapter;
     ListView lvItems;
     EditText etEditText;
@@ -25,26 +25,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FlowManager.init(new FlowConfig.Builder(this).build());
+
         setContentView(R.layout.activity_main);
         populateArrayItems();
 
-        lvItems = (ListView) findViewById(R.id.lvItems);
-        lvItems.setAdapter(aToDoAdapter);
         etEditText = (EditText) findViewById(R.id.etEditText);
+
+        //Remove item from list when user long tapped
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 todoItems.remove(position);
                 aToDoAdapter.notifyDataSetChanged();
-                writeItems();
+                deleteItemInDB(position);
                 return true;
             }
         });
 
+        //Update item from list when user tapped on the item
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 //Sending data to EditItemActivity
                 Intent i = new Intent(MainActivity.this, EditItemActivity.class);
                 i.putExtra("item", todoItems.get(position).toString());
@@ -54,51 +58,74 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void populateArrayItems() {
-        readItems();
-        ArrayList<ListItem> arrayOfListItems = ListItem.getListItem();
+    private void deleteItemInDB(int position) {
+        ToDoItem deleteInDB = new ToDoItem();
 
-        aToDoAdapter = new ItemsAdapter(this, arrayOfListItems);
+        deleteInDB.setPosition(position);
+        deleteInDB.delete();
+
+        // Query  the table to get all the items after current deleted item, and decrement their position by 1.
+        //Now the item positions on UI matches the value stored in DB for all item, except we still have last item remaining
+        //Delete the last item in DB, as it's the duplicate of last-1 element
+        List<ToDoItem> toDoItemList = SQLite.select().from(ToDoItem.class).where(ToDoItem_Table.position.greaterThan(position)).queryList();
+
+        for (int i = 0; i < toDoItemList.size(); i++) {
+            ToDoItem currentToDoItem = toDoItemList.get(i);
+            int dbPosition = currentToDoItem.getPosition();
+            currentToDoItem.setPosition(dbPosition - 1);
+            currentToDoItem.save();
+        }
+
+        deleteInDB.setPosition(todoItems.size());
+        deleteInDB.delete();
+    }
+
+    public void populateArrayItems() {
+        // Construct the data source
+        todoItems = new ArrayList<>();
+        readItemsFromDB();
+
+        // Create the adapter to convert the array to views
+        aToDoAdapter = new ItemsAdapter(this, todoItems);
+
+        // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.lvItems);
         listView.setAdapter(aToDoAdapter);
-        //aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
     }
 
-    private void readItems() {
-        File fileDir = getFilesDir();
-        File file = new File(fileDir, "todo.txt");
-        try {
-            todoItems = new ArrayList<String>(FileUtils.readLines(file));
-        } catch (IOException e) {
-            todoItems = new ArrayList<String>();
+    private void readItemsFromDB() {
+        // Query  whole table
+        List<ToDoItem> toDoItemList = SQLite.select().from(ToDoItem.class).queryList();
+
+        for (int i = 0; i < toDoItemList.size(); i++) {
+            ListItem listItem = new ListItem(toDoItemList.get(i).getName(), "09/01/2017");
+            todoItems.add(i, listItem);
         }
+
     }
 
-    private void writeItems() {
-        File fileDir = getFilesDir();
-        File file = new File(fileDir, "todo.txt");
-        try {
-            FileUtils.writeLines(file, todoItems);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void writeItemToDB() {
+        int numTodoItems = todoItems.size();
+        ToDoItem toDoItem = new ToDoItem();
+        toDoItem.setName(todoItems.get(numTodoItems - 1).toString());
+        toDoItem.setPosition(numTodoItems - 1);
+        toDoItem.save();
     }
 
     public void onAddItem(View view) {
         //aToDoAdapter.add(etEditText.getText().toString());
         etEditText.setText("");
-        writeItems();
+        writeItemToDB();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            String item = data.getExtras().getString("item");
+            ListItem item = new ListItem(data.getExtras().getString("item"),"09/01/2017");
             int item_position = data.getIntExtra("item_position", 0);
 
             todoItems.set(item_position, item);
             aToDoAdapter.notifyDataSetChanged();
-            writeItems();
         }
     }
 }
