@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codepath.simpletodo.MainActivity"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    tools:context="com.codepath.simpletodo.MainActivity">
 
     <Button
         android:id="@+id/btnAddItem"
@@ -13,10 +13,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/round_button"
-        android:onClick="onAddItem"
         android:layout_marginBottom="2dp"
         android:layout_marginRight="2dp"
+        android:background="@drawable/round_button"
+        android:onClick="onAddItem"
         android:text="@string/add" />
 
     <ListView
@@ -26,10 +26,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:dividerHeight="5dp"/>
+        android:dividerHeight="5dp" />
 
     <EditText
-        android:textColor="@color/colorPrimary"
         android:id="@+id/etEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,6 +38,8 @@
         android:layout_alignTop="@+id/btnAddItem"
         android:layout_toLeftOf="@+id/btnAddItem"
         android:layout_toStartOf="@+id/btnAddItem"
-        android:hint="@string/add_item" />
+        android:hint="@string/add_item"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorAccent" />
 
 </RelativeLayout>

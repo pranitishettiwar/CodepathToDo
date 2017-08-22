@@ -1,13 +1,16 @@
 package com.codepath.simpletodo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
@@ -86,7 +89,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void populateArrayItems() {
         readItemsFromDB();
-        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
+        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+
+                textView.setTextColor(Color.WHITE);
+                textView.setBackgroundColor(Color.DKGRAY);
+
+                return view;
+            }
+        };
     }
 
     private void readItemsFromDB() {
