@@ -18,7 +18,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<ListItem> todoItems;
-    ItemsAdapter aToDoAdapter;
+    ItemsAdapter itemsAdapter;
     ListView lvItems;
     EditText etEditText;
 
@@ -32,30 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         etEditText = (EditText) findViewById(R.id.etEditText);
 
-        //Remove item from list when user long tapped
-        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                todoItems.remove(position);
-                aToDoAdapter.notifyDataSetChanged();
-                deleteItemInDB(position);
-                return true;
-            }
-        });
 
-        //Update item from list when user tapped on the item
-        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //Sending data to EditItemActivity
-                Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                i.putExtra("item", todoItems.get(position).toString());
-                i.putExtra("item_position", position);
-                startActivityForResult(i, 1);
-            }
-        });
     }
 
     private void deleteItemInDB(int position) {
@@ -86,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
         readItemsFromDB();
 
         // Create the adapter to convert the array to views
-        aToDoAdapter = new ItemsAdapter(this, todoItems);
+        itemsAdapter = new ItemsAdapter(this, todoItems);
 
         // Attach the adapter to a ListView
         ListView listView = (ListView) findViewById(R.id.lvItems);
-        listView.setAdapter(aToDoAdapter);
+        listView.setAdapter(itemsAdapter);
     }
 
     private void readItemsFromDB() {
@@ -113,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAddItem(View view) {
-        //aToDoAdapter.add(etEditText.getText().toString());
+        ListItem listItem = new ListItem(etEditText.getText().toString(), "09/01/2017");
+        itemsAdapter.add(listItem);
         etEditText.setText("");
         writeItemToDB();
     }
@@ -125,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             int item_position = data.getIntExtra("item_position", 0);
 
             todoItems.set(item_position, item);
-            aToDoAdapter.notifyDataSetChanged();
+            itemsAdapter.notifyDataSetChanged();
         }
     }
 }

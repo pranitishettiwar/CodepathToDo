@@ -25,10 +25,10 @@ public class ListItem {
         return tododate;
     }
 
-    public static ArrayList<ListItem> getListItem() {
-        ArrayList<ListItem> lists = new ArrayList<ListItem>();
-        lists.add(new ListItem("Milk","7/12/2017"));
-        return lists;
-    }
+//    public static ArrayList<ListItem> getListItem() {
+//        ArrayList<ListItem> lists = new ArrayList<ListItem>();
+//        lists.add(new ListItem("Milk","7/12/2017"));
+//        return lists;
+//    }
 
 }
