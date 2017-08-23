@@ -1,6 +1,5 @@
 package com.codepath.simpletodo;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +19,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EditItemDialogFragment.EditItemDialogListener {
 
     ArrayList<String> todoItems;
     ArrayAdapter<String> aToDoAdapter;
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setAdapter(aToDoAdapter);
         etEditText = (EditText) findViewById(R.id.etEditText);
 
+
         //Remove item from list when user long tapped
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -54,15 +54,26 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                //Sending data to EditItemActivity
-                Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                i.putExtra("item", todoItems.get(position).toString());
-                i.putExtra("item_position", position);
-                startActivityForResult(i, 1);
+                sendData(position);
             }
+
         });
+    }
+
+    //Sending data to EditItemActivity
+    private void sendData(int position) {
+        {
+            EditItemDialogFragment dialogFragment = new EditItemDialogFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("item", todoItems.get(position).toString());
+            bundle.putInt("item_position", position);
+
+            dialogFragment.setArguments(bundle);
+            dialogFragment.show(getFragmentManager(), "fragment_edit_item");
+
+        }
     }
 
     private void deleteItemInDB(int position) {
@@ -131,16 +142,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            String item = data.getExtras().getString("item");
-            int item_position = data.getIntExtra("item_position", 0);
-
-            todoItems.set(item_position, item);
-            aToDoAdapter.notifyDataSetChanged();
-
-            Toast.makeText(this,
-                    "Item updated:" + " " + item, Toast.LENGTH_LONG).show();
-        }
+    public void onFinishEditDialog(String item_text, int item_position) {
+        todoItems.set(item_position, item_text);
+        aToDoAdapter.notifyDataSetChanged();
+        Toast.makeText(this, "Item updated:" + " " + item_text, Toast.LENGTH_SHORT).show();
     }
+
 }
