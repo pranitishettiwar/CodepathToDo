@@ -5,4 +5,6 @@
     <color name="colorAccent">#ea9833</color>
     <color name="colorBackground">#232222</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="dialogGrey">#444444</color>
+    <color name="colorDialogTitle">#33d2ea</color>
 </resources>

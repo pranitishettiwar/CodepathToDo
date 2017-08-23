@@ -34,6 +34,9 @@ public class EditItemDialogFragment extends DialogFragment {
 
         View view = inflater.inflate(R.layout.fragment_edit_item, container, false);
 
+        // Set title for this dialog
+        getDialog().setTitle("Edit Item");
+
         //Get field from view
         mEditText = (EditText) view.findViewById(R.id.etEditItem);
         mbtn = (Button) view.findViewById(R.id.btnSave);

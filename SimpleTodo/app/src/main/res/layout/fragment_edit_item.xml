@@ -14,9 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:width="60dp"
-        android:height="20dp"
-        android:background="#ea9833"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="2dp"
+        android:background="@drawable/round_button"
         android:onClick="editItem"
         android:text="@string/btnSave" />
 
@@ -25,8 +25,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/btnSave"
-        android:ems="12"
-        android:inputType="textMultiLine" />
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorAccent" />
 </RelativeLayout>
 
 
