@@ -79,8 +79,6 @@ public class EditItemDialogFragment extends DialogFragment {
         itemInDB.setPosition(item_position);
         itemInDB.save();
     }
-
-
 }
 
 

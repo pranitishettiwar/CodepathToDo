@@ -1,7 +1,5 @@
 package com.codepath.simpletodo;
 
-import java.util.ArrayList;
-
 /**
  * Created by praniti on 8/21/17.
  */
@@ -25,10 +23,14 @@ public class ListItem {
         return tododate;
     }
 
-//    public static ArrayList<ListItem> getListItem() {
-//        ArrayList<ListItem> lists = new ArrayList<ListItem>();
-//        lists.add(new ListItem("Milk","7/12/2017"));
-//        return lists;
-//    }
+    // set todo name
+    public void setToDoName(String name) {
+        todoname = name;
+    }
+
+    // set todo name
+    public void setToDoDate(String date) {
+        tododate = date;
+    }
 
 }
