@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- fragment_edit_item.xml -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/edit_name"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codepath.simpletodo.EditItemActivity">
+    android:layout_gravity="center"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:width="60dp"
-        android:height="20dp"
-        android:background="#ea9833"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="2dp"
+        android:background="@drawable/round_button"
         android:onClick="editItem"
         android:text="@string/btnSave" />
 
@@ -20,10 +24,11 @@
         android:id="@+id/etEditItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/btnSave"
-        android:ems="12"
-        android:inputType="textMultiLine" />
-
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorAccent" />
 </RelativeLayout>
+
+
