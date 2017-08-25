@@ -9,16 +9,19 @@ import android.widget.Toast;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements EditItemDialogFragment.EditItemDialogListener {
 
     ArrayList<ListItem> todoItems;
     ItemsAdapter itemsAdapter;
-    EditText etEditText;
+    EditText mEditText;
+    String currentDate;
+    TodoItemsDbHelper todoItemsDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +31,17 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogFra
         setContentView(R.layout.activity_main);
         populateArrayItems();
 
-        etEditText = (EditText) findViewById(R.id.etEditText);
+        DateFormat df = new SimpleDateFormat("dd/MM/yy");
+        Date dateobj = new Date();
+        currentDate = df.format(dateobj);
+
+        mEditText = (EditText) findViewById(R.id.etEditText);
     }
 
     // Called by ItemsAdapter
     public void todoItemLongClicked(int position) {
-        deleteItemInDB(position);
+        //Delete selected item from DB
+        todoItemsDbHelper.deleteItemInDB(position, todoItems);
     }
 
     //Sending data to EditItemActivity
@@ -41,40 +49,22 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogFra
         {
             EditItemDialogFragment dialogFragment = new EditItemDialogFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("item", todoItems.get(position).getToDoName().toString());
-            bundle.putInt("item_position", position);
+            bundle.putString("item", todoItems.get(position).getTodoName().toString());
+            bundle.putString("itemDate", todoItems.get(position).getTodoDate().toString());
+            bundle.putInt("itemPosition", position);
 
             dialogFragment.setArguments(bundle);
             dialogFragment.show(getFragmentManager(), "fragment_edit_item");
         }
     }
 
-    private void deleteItemInDB(int position) {
-        // Delete the current item
-        ToDoItem deleteInDB = new ToDoItem();
-        deleteInDB.setPosition(position);
-        deleteInDB.delete();
-
-        // Query the table to get all the items after current deleted item, and decrement their position by 1.
-        //Now the item positions on UI matches the value stored in DB for all items, except we still have last item remaining
-        //Delete the last item in DB, as it's the duplicate of last-1 element
-        List<ToDoItem> toDoItemList = SQLite.select().from(ToDoItem.class).where(ToDoItem_Table.position.greaterThan(position)).queryList();
-
-        for (int i = 0; i < toDoItemList.size(); i++) {
-            ToDoItem currentToDoItem = toDoItemList.get(i);
-            int dbPosition = currentToDoItem.getPosition();
-            currentToDoItem.setPosition(dbPosition - 1);
-            currentToDoItem.save();
-        }
-
-        deleteInDB.setPosition(todoItems.size());
-        deleteInDB.delete();
-    }
-
     public void populateArrayItems() {
         // Construct the data source
         todoItems = new ArrayList<>();
-        readItemsFromDB();
+
+        //Read all the items from the DB
+        todoItemsDbHelper = new TodoItemsDbHelper();
+        todoItemsDbHelper.readItemsFromDB(todoItems);
 
         // Create the adapter to convert the array to views
         itemsAdapter = new ItemsAdapter(this, todoItems);
@@ -84,38 +74,22 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogFra
         listView.setAdapter(itemsAdapter);
     }
 
-    private void readItemsFromDB() {
-        // Query  whole table
-        List<ToDoItem> toDoItemList = SQLite.select().from(ToDoItem.class).queryList();
-
-        for (int i = 0; i < toDoItemList.size(); i++) {
-            ListItem listItem = new ListItem(toDoItemList.get(i).getName(), "09/01/2017");
-            todoItems.add(i, listItem);
-        }
-
-    }
-
-    private void writeItemToDB() {
-        int numTodoItems = todoItems.size();
-        ToDoItem toDoItem = new ToDoItem();
-        toDoItem.setName(todoItems.get(numTodoItems - 1).getToDoName().toString());
-        toDoItem.setPosition(numTodoItems - 1);
-        toDoItem.save();
-    }
 
     public void onAddItem(View view) {
-        ListItem listItem = new ListItem(etEditText.getText().toString(), "09/01/2017");
-        Toast.makeText(this, "Item updated:" + " " + etEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+        ListItem listItem = new ListItem(mEditText.getText().toString(), "added on " + currentDate);
+        Toast.makeText(this, "Item Added:" + " " + mEditText.getText().toString(), Toast.LENGTH_SHORT).show();
         itemsAdapter.add(listItem);
-        etEditText.setText("");
-        writeItemToDB();
+        mEditText.setText("");
+
+        //Write newly added item in DB
+        todoItemsDbHelper.writeItemToDB(todoItems);
     }
 
     @Override
-    public void onFinishEditDialog(String item_text, int item_position) {
-        todoItems.get(item_position).setToDoName(item_text);
+    public void onFinishEditDialog(String itemText, int itemPosition) {
+        todoItems.get(itemPosition).setTodoName(itemText);
         itemsAdapter.notifyDataSetChanged();
-        Toast.makeText(this, "Item updated:" + " " + item_text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Item Updated:" + " " + itemText, Toast.LENGTH_SHORT).show();
     }
 
 }

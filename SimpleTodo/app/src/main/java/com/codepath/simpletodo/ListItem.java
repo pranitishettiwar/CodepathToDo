@@ -5,32 +5,32 @@ package com.codepath.simpletodo;
  */
 
 public class ListItem {
-    private String todoname;
-    private String tododate;
+    private String todoName;
+    private String todoDate;
 
-    public ListItem(String todoname, String tododate) {
-        this.todoname = todoname;
-        this.tododate = tododate;
+    public ListItem(String todoName, String todoDate) {
+        this.todoName = todoName;
+        this.todoDate = todoDate;
     }
 
     //retrieve todo name
-    public String getToDoName() {
-        return todoname;
+    public String getTodoName() {
+        return todoName;
     }
 
     //retrieve todo due date
-    public String getToDoDate() {
-        return tododate;
+    public String getTodoDate() {
+        return todoDate;
     }
 
     // set todo name
-    public void setToDoName(String name) {
-        todoname = name;
+    public void setTodoName(String name) {
+        todoName = name;
     }
 
     // set todo name
-    public void setToDoDate(String date) {
-        tododate = date;
+    public void setTodoDate(String date) {
+        todoDate = date;
     }
 
 }

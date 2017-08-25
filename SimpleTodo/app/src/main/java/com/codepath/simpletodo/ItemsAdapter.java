@@ -16,11 +16,11 @@ import java.util.ArrayList;
 
 public class ItemsAdapter extends ArrayAdapter<ListItem> implements View.OnClickListener, View.OnLongClickListener {
 
-    MainActivity activity;
+    MainActivity mActivity;
 
     public ItemsAdapter(Context context, ArrayList<ListItem> listItem) {
         super(context, 0, listItem);
-        activity = (MainActivity) context;
+        mActivity = (MainActivity) context;
     }
 
     @Override
@@ -38,8 +38,8 @@ public class ItemsAdapter extends ArrayAdapter<ListItem> implements View.OnClick
         TextView tvToDoDate = (TextView) convertView.findViewById(R.id.tvToDoDate);
 
         // Populate the data into the template view using the data object
-        tvToDoName.setText(listItem.getToDoName());
-        tvToDoDate.setText(listItem.getToDoDate());
+        tvToDoName.setText(listItem.getTodoName());
+        tvToDoDate.setText(listItem.getTodoDate());
 
         //Call Click Listeners on the current row
         convertView.setOnLongClickListener(this);
@@ -60,14 +60,14 @@ public class ItemsAdapter extends ArrayAdapter<ListItem> implements View.OnClick
         int position = (Integer) view.getTag();
         // Also remove the current item
         remove(getItem(position));
-        activity.todoItemLongClicked(position);
+        mActivity.todoItemLongClicked(position);
         return true;
     }
 
     @Override
     public void onClick(View view) {
         int position = (Integer) view.getTag();
-        activity.sendData(position);
+        mActivity.sendData(position);
     }
 
 }

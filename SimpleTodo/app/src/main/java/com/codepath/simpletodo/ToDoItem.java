@@ -19,6 +19,9 @@ public class ToDoItem extends BaseModel {
     @Column
     private String name;
 
+    @Column
+    private String date;
+
     public int getPosition() {
         return position;
     }
@@ -35,5 +38,12 @@ public class ToDoItem extends BaseModel {
         this.name = name;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }
 

@@ -17,8 +17,10 @@ import android.widget.EditText;
 public class EditItemDialogFragment extends DialogFragment {
 
     private EditText mEditText;
-    private Button mbtn;
-    private int item_position;
+    private Button mButton;
+    private int itemPosition;
+    private String itemDate;
+    private TodoItemsDbHelper todoItemsDbHelper;
 
     public interface EditItemDialogListener {
         void onFinishEditDialog(String inputText, int position);
@@ -39,12 +41,14 @@ public class EditItemDialogFragment extends DialogFragment {
 
         //Get field from view
         mEditText = (EditText) view.findViewById(R.id.etEditItem);
-        mbtn = (Button) view.findViewById(R.id.btnSave);
+        mButton = (Button) view.findViewById(R.id.btnSave);
 
         //Unpack data from Bundle
         Bundle bundle = getArguments();
         String item = bundle.getString("item");
-        item_position = bundle.getInt("item_position", 1);
+        itemDate = bundle.getString("itemDate");
+        itemPosition = bundle.getInt("itemPosition", 1);
+
         mEditText.setText(item);
         mEditText.setSelection(mEditText.getText().length());
 
@@ -54,14 +58,16 @@ public class EditItemDialogFragment extends DialogFragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 
-        mbtn.setOnClickListener(new View.OnClickListener() {
+        mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateItemInDB();
+                //Updating item in DB
+                todoItemsDbHelper = new TodoItemsDbHelper();
+                todoItemsDbHelper.updateItemInDB(mEditText, itemPosition, itemDate);
 
                 // Return input text back to activity through the implemented listener
                 EditItemDialogListener listener = (EditItemDialogListener) getActivity();
-                listener.onFinishEditDialog(mEditText.getText().toString(), item_position);
+                listener.onFinishEditDialog(mEditText.getText().toString(), itemPosition);
 
                 //Close the dialog and return back to the parent activity
                 dismiss();
@@ -71,14 +77,6 @@ public class EditItemDialogFragment extends DialogFragment {
         return view;
     }
 
-    private void updateItemInDB() {
-        ToDoItem itemInDB = new ToDoItem();
-
-        //Saving the Edited value in DB
-        itemInDB.setName(mEditText.getText().toString());
-        itemInDB.setPosition(item_position);
-        itemInDB.save();
-    }
 }
 
 
