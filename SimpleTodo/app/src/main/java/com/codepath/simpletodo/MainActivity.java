@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogFra
 
 
     public void onAddItem(View view) {
-        ListItem listItem = new ListItem(mEditText.getText().toString(), "added on " + currentDate);
+        ListItem listItem = new ListItem(mEditText.getText().toString(), "due " + currentDate, "NORMAL");
         Toast.makeText(this, "Item Added:" + " " + mEditText.getText().toString(), Toast.LENGTH_SHORT).show();
         itemsAdapter.add(listItem);
         mEditText.setText("");
@@ -86,8 +86,9 @@ public class MainActivity extends AppCompatActivity implements EditItemDialogFra
     }
 
     @Override
-    public void onFinishEditDialog(String itemText, int itemPosition) {
+    public void onFinishEditDialog(String itemText, int itemPosition, String itemPriority) {
         todoItems.get(itemPosition).setTodoName(itemText);
+        todoItems.get(itemPosition).setTodoPriority(itemPriority);
         itemsAdapter.notifyDataSetChanged();
         Toast.makeText(this, "Item Updated:" + " " + itemText, Toast.LENGTH_SHORT).show();
     }

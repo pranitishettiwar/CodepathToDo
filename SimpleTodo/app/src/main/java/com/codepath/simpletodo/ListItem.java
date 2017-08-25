@@ -7,10 +7,12 @@ package com.codepath.simpletodo;
 public class ListItem {
     private String todoName;
     private String todoDate;
+    private String todoPriority;
 
-    public ListItem(String todoName, String todoDate) {
+    public ListItem(String todoName, String todoDate, String todoPriority) {
         this.todoName = todoName;
         this.todoDate = todoDate;
+        this.todoPriority = todoPriority;
     }
 
     //retrieve todo name
@@ -23,14 +25,23 @@ public class ListItem {
         return todoDate;
     }
 
+    //retrieve todo priority
+    public String getPriority() {
+        return todoPriority;
+    }
+
     // set todo name
     public void setTodoName(String name) {
         todoName = name;
     }
 
-    // set todo name
+    // set todo date
     public void setTodoDate(String date) {
         todoDate = date;
     }
 
+    // set todo priority
+    public void setTodoPriority(String priority) {
+        todoPriority = priority;
+    }
 }

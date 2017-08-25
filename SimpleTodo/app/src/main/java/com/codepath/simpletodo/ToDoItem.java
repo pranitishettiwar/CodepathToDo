@@ -22,6 +22,9 @@ public class ToDoItem extends BaseModel {
     @Column
     private String date;
 
+    @Column
+    private String priority;
+
     public int getPosition() {
         return position;
     }
@@ -44,6 +47,14 @@ public class ToDoItem extends BaseModel {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 }
 

@@ -36,10 +36,12 @@ public class ItemsAdapter extends ArrayAdapter<ListItem> implements View.OnClick
         // Lookup view for data population
         TextView tvToDoName = (TextView) convertView.findViewById(R.id.tvToDoName);
         TextView tvToDoDate = (TextView) convertView.findViewById(R.id.tvToDoDate);
+        TextView tvToDoPriority = (TextView) convertView.findViewById(R.id.tvToDoPriority);
 
         // Populate the data into the template view using the data object
         tvToDoName.setText(listItem.getTodoName());
         tvToDoDate.setText(listItem.getTodoDate());
+        tvToDoPriority.setText(listItem.getPriority());
 
         //Call Click Listeners on the current row
         convertView.setOnLongClickListener(this);

@@ -35,13 +35,14 @@ public class TodoItemsDbHelper {
         deleteInDB.delete();
     }
 
-    public void updateItemInDB(EditText mEditText, int itemPosition, String itemDate) {
+    public void updateItemInDB(EditText mEditText, int itemPosition, String itemDate, String itemPriority) {
         ToDoItem itemInDB = new ToDoItem();
 
         //Saving the Edited value in DB
         itemInDB.setName(mEditText.getText().toString());
         itemInDB.setPosition(itemPosition);
         itemInDB.setDate(itemDate);
+        itemInDB.setPriority(itemPriority);
         itemInDB.save();
     }
 
@@ -50,7 +51,7 @@ public class TodoItemsDbHelper {
         List<ToDoItem> toDoItemList = SQLite.select().from(ToDoItem.class).queryList();
 
         for (int i = 0; i < toDoItemList.size(); i++) {
-            ListItem listItem = new ListItem(toDoItemList.get(i).getName(), toDoItemList.get(i).getDate());
+            ListItem listItem = new ListItem(toDoItemList.get(i).getName(), toDoItemList.get(i).getDate(), toDoItemList.get(i).getPriority());
             todoItems.add(i, listItem);
         }
 
@@ -62,6 +63,8 @@ public class TodoItemsDbHelper {
         toDoItem.setName(todoItems.get(numTodoItems - 1).getTodoName().toString());
         toDoItem.setPosition(numTodoItems - 1);
         toDoItem.setDate(todoItems.get(numTodoItems - 1).getTodoDate().toString());
+        toDoItem.save();
+        toDoItem.setPriority(todoItems.get(numTodoItems - 1).getPriority().toString());
         toDoItem.save();
     }
 }

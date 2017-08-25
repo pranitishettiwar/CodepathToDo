@@ -10,12 +10,22 @@
         android:id="@+id/tvToDoName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:paddingRight="50dp"
         android:text="Name" />
 
     <TextView
         android:id="@+id/tvToDoDate"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/tvToDoPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingLeft="50dp"
+        android:textColor="@android:color/holo_orange_light" />
 
 </LinearLayout>

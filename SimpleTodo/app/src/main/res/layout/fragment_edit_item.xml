@@ -24,11 +24,36 @@
         android:id="@+id/etEditItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnSave"
+        android:layout_marginEnd="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="23dp"
+        android:layout_marginStart="23dp"
         android:layout_toLeftOf="@+id/btnSave"
+        android:layout_toStartOf="@+id/btnSave"
         android:ems="10"
         android:inputType="textMultiLine"
-        android:textColor="@color/colorWhite"
-        android:textColorHint="@color/colorAccent" />
+        android:textColor="@color/colorWhite" />
+
+    <TextView
+        android:id="@+id/tvPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="65dp"
+        android:text="Priority Level:"
+        android:textColor="@color/colorWhite" />
+
+    <Spinner
+        android:id="@+id/spinnerPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="85dp"
+        android:layout_marginTop="51dp"
+        android:spinnerMode="dropdown" />
+
 </RelativeLayout>
 
 
